@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#2b2118"/><rect x="110" y="70" width="980" height="490" fill="#f3ead3"/><path d="M150 115h900M150 515h900" stroke="#d9c9a3" stroke-width="2" stroke-dasharray="8 10"/>
+  <text x="175" y="160" fill="#b3202a" font-family="monospace" font-size="21" letter-spacing="5">CASE FILE NO. 001 · PUBLIC RELEASE</text><text x="175" y="285" fill="#1f1a14" font-family="monospace" font-weight="700" font-size="70">MANASA GOPISETTY</text><rect x="175" y="310" width="620" height="7" fill="#b3202a"/>
+  <text x="175" y="370" fill="#23364d" font-family="Arial" font-weight="700" font-size="27">AI · MACHINE LEARNING · SOFTWARE ENGINEERING</text><text x="175" y="430" fill="#4a3f31" font-family="Arial" font-size="24">A classified portfolio, cleared for public viewing.</text>
+  <g transform="translate(935 424) rotate(-9)"><circle r="82" fill="none" stroke="#b3202a" stroke-width="8"/><circle r="67" fill="none" stroke="#b3202a" stroke-width="3"/><rect x="-100" y="-25" width="200" height="50" fill="#f3ead3" stroke="#b3202a" stroke-width="6"/><text text-anchor="middle" y="10" fill="#b3202a" font-family="monospace" font-weight="700" font-size="27">TOP SECRET</text></g>
+</svg>
