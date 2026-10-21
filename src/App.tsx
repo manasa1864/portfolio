@@ -149,7 +149,7 @@ function Photo() {
       <div className="photo-image">
         {!failed ? (
           <img
-            src={`${import.meta.env.BASE_URL}photo.webp`}
+            src={`${import.meta.env.BASE_URL}photo.jpeg`}
             alt="Portrait of Manasa Gopisetty"
             onError={() => setFailed(true)}
           />

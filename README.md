@@ -24,7 +24,7 @@ Production output is written to `dist/`. The production base is `/portfolio/`. I
 ## Content and assets
 
 - Edit text, links, projects, skills and achievements in `src/content.ts`.
-- Add a portrait at `public/photo.webp` (4:5 crop). An accessible silhouette appears until it exists.
+- Add a portrait at `public/photo.jpeg` (4:5 crop). An accessible silhouette appears until it exists.
 - Google Fonts use `display=swap` and include system fallbacks.
 
 ## Accessibility
@@ -48,7 +48,7 @@ The portfolio includes semantic landmarks, one H1, labelled fields, visible focu
 
 ## Placeholders still to fill
 
-1. `public/photo.webp` — Manasa’s portrait.
+1. `public/photo.jpeg` — Manasa’s portrait.
 3. Maison live demo URL.
 4. Secret Loyalties paper PDF URL.
 5. ICR DPO Kaggle dataset URL.
