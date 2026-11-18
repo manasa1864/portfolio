@@ -177,7 +177,7 @@ function Photo() {
       </div>
       <div className="photo-caption">
         <strong>Subject photo</strong>
-        <span>CASE 001 · ID/MG-26</span>
+        <span>CASE 001 · ID/MG-06</span>
       </div>
     </div>
   )
