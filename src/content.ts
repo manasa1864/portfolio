@@ -425,6 +425,7 @@ export const content = {
       stack: ["React", "TypeScript", "FastAPI", "Neo4j", "LLMs"],
       code: "https://github.com/manasa1864/META_CV",
       featured: true,
+      status: "IN DEVELOPMENT",
       event: "Meta Cerebral Valley Hackathon 2026",
       overview: [
         "Prism AI is an adaptive chatbot that tries to prevent hallucinations by design instead of cleaning them up afterwards. Each question gets a profile of the hallucinations it is at risk of, and is routed to the tier that can verify those risks.",
