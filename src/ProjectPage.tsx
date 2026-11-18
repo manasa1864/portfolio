@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { content } from "./content"
+import { content, type Section } from "./content"
 import { ExternalLink, projectHref } from "./ui"
 
 export default function ProjectPage({ slug }: { slug: string }) {
@@ -130,6 +130,26 @@ export default function ProjectPage({ slug }: { slug: string }) {
           )}
         </section>
 
+        {"video" in project && project.video && (
+          <section className="project-section">
+            <p className="eyebrow">Demo</p>
+            <h2>Watch it work</h2>
+            <div className="video-frame">
+              <iframe
+                src={project.video.embed}
+                title={project.video.title}
+                loading="lazy"
+                allowFullScreen
+              />
+            </div>
+            <p className="video-link">
+              <ExternalLink href={project.video.url}>
+                Open the video in a new tab
+              </ExternalLink>
+            </p>
+          </section>
+        )}
+
         <section className="project-section">
           <p className="eyebrow">Key details</p>
           <h2>What makes it work</h2>
@@ -157,10 +177,11 @@ export default function ProjectPage({ slug }: { slug: string }) {
         )}
 
         {"sections" in project &&
-          project.sections?.map((section) => (
+          project.sections?.map((section: Section) => (
             <section className="project-section" key={section.title}>
               <p className="eyebrow">{section.eyebrow}</p>
               <h2>{section.title}</h2>
+              {section.intro && <p className="project-lead">{section.intro}</p>}
               <ul className="notes detail-list">
                 {section.items.map((item) => (
                   <li key={item}>{item}</li>

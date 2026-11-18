@@ -28,6 +28,7 @@ export type Project = {
   results?: Metric[]
   sections?: Section[]
   quote?: { text: string; by: string }
+  video?: { title: string; embed: string; url: string }
   notes?: string[]
   documents?: Link[]
   links?: Link[]
@@ -495,7 +496,16 @@ export const content = {
           ],
         },
       ],
+      video: {
+        title: "Prism AI demo video",
+        embed: "https://www.loom.com/embed/d2054d21017a437fb1793e93cfff0c63",
+        url: "https://www.loom.com/share/d2054d21017a437fb1793e93cfff0c63",
+      },
       links: [
+        {
+          label: "Demo video",
+          url: "https://www.loom.com/share/d2054d21017a437fb1793e93cfff0c63",
+        },
         { label: "GitHub repository", url: "https://github.com/manasa1864/META_CV" },
       ],
     },
@@ -814,7 +824,100 @@ export const content = {
       ],
     },
     {
-      id: "I-10",
+      id: "Y-10",
+      slug: "milestonepay",
+      name: "MilestonePay",
+      summary: "Pay freelancers one verified milestone at a time.",
+      details: [
+        "Holds the budget on PayPal and releases it as GitHub checks pass.",
+        "Splits a project into milestones with weighted acceptance criteria.",
+      ],
+      stack: ["React", "TypeScript", "Supabase", "PayPal", "GitHub API", "Claude"],
+      code: "https://github.com/manasa1864/MilestonePay",
+      featured: true,
+      event: "PayPal Hackathon",
+      overview: [
+        "MilestonePay is a web app for paying freelancers for software work one milestone at a time. A client describes a project and a budget, and the plan is split into milestones, each with acceptance criteria that can be checked against a GitHub repository.",
+        "The client authorizes the whole budget once through PayPal, which holds the money without sending it. The freelancer submits a repository for each milestone, the app checks it, and the client approves the payment. Nothing is ever paid automatically.",
+      ],
+      highlights: [
+        {
+          title: "Authorize once, release in pieces",
+          text: "The full budget is held on the client's PayPal account and nothing is charged until the client approves a milestone. Cancelling voids whatever has not been captured.",
+        },
+        {
+          title: "Criteria checked against GitHub",
+          text: "Each milestone has weighted criteria that run against the latest commit: a file exists, CI passes, a pull request is merged, or a manual review by the client.",
+        },
+        {
+          title: "A fair late penalty",
+          text: "The release amount scales with the weight of passed criteria and a capped late penalty. Lateness is measured from when the freelancer submits, so a slow client review never penalises them.",
+        },
+        {
+          title: "AI-drafted milestone plans",
+          text: "A plan of 2 to 6 milestones is drafted from the brief and budget by Claude, with a built-in planner as the fallback. The client can edit everything before funding.",
+        },
+        {
+          title: "Searchable freelancer directory",
+          text: "Clients search profiles by keyword and skill. Resume text is read in the browser, with OCR for scanned PDFs, so resumes become searchable.",
+        },
+      ],
+      flow: [
+        "The client creates a project with a title, a brief, a budget, the freelancer and a late-delivery penalty.",
+        "A milestone plan is drafted with weighted acceptance criteria and due dates, and the client edits it.",
+        "The client funds the project by authorizing the full budget with PayPal. The first milestone opens.",
+        "The freelancer pastes a GitHub repository URL, and the criteria run against the latest commit.",
+        "The client reads the evidence report, then approves the payment or requests a revision.",
+        "Approving captures the release amount and pays it to the freelancer's PayPal email. After the last milestone, PayPal releases anything left.",
+        "The client can leave one rating and comment per project once a payment has been captured.",
+      ],
+      results: [
+        { value: "4", label: "automatic criterion types" },
+        { value: "2–6", label: "milestones per drafted plan" },
+        { value: "13", label: "database tables with row-level security" },
+      ],
+      sections: [
+        {
+          eyebrow: "Payments",
+          title: "How the amount is calculated",
+          intro: "release = base x (1 - penalty), where base is the milestone amount times the weight of passed criteria, and the penalty is days late times a daily percentage, capped.",
+          items: [
+            "Example: a $500 milestone where criteria worth 80% passed, submitted 3 days late at 2% per day with a 20% cap, releases $400 x 94% = $376.00.",
+            "The calculation runs in the database and is shown on the evidence report before the client approves.",
+            "Capture and payout calls carry a PayPal request ID, so a retry never charges twice, and a failed payout can be retried from the project page.",
+          ],
+        },
+        {
+          eyebrow: "Security",
+          title: "How the data and money are protected",
+          items: [
+            "All PayPal calls are made by a server-side Edge Function, never from the browser.",
+            "Row Level Security is on every table, so users see only their own projects and edit only their own profile. Every state change goes through a checked database function.",
+            "The public freelancer directory never shows earnings, payments or PayPal emails, and resumes live in a private storage bucket.",
+            "The app runs in Local, Supabase, or Supabase with PayPal Sandbox mode depending on configuration, so it can be tried with no setup.",
+          ],
+        },
+      ],
+      notes: [
+        "All payments use the PayPal Sandbox, which is free test money. No real money is ever involved.",
+        "There is no email verification or password reset yet, and PayPal authorizations expire after 29 days, so due dates are limited to 28 days.",
+        "The automatic checks only look at whether files, CI runs and merged pull requests exist. They cannot judge the content of a file, so those criteria use client review.",
+      ],
+      video: {
+        title: "MilestonePay demo video",
+        embed: "https://www.youtube.com/embed/AWRAvQp2LK0",
+        url: "https://youtu.be/AWRAvQp2LK0",
+      },
+      links: [
+        { label: "Demo video", url: "https://youtu.be/AWRAvQp2LK0" },
+        {
+          label: "GitHub repository",
+          url: "https://github.com/manasa1864/MilestonePay",
+        },
+      ],
+    },
+    {
+      id: "I-11",
       slug: "insurance",
       name: "INSURANCE",
       summary: "PolicyWise AI, an insurance recommendation platform.",
@@ -886,6 +989,7 @@ export const content = {
     },
     { label: "Meta Cerebral Valley Hackathon 2026", slug: "prism-ai" },
     { label: "Vibeathon 2026", slug: "maison" },
+    { label: "PayPal Hackathon", slug: "milestonepay" },
     { label: "Global Fusion · AI + EdTech", slug: "why-engine" },
   ],
   skills: {
@@ -1011,6 +1115,16 @@ export const content = {
       slug: "maison",
       links: [
         { label: "GitHub", url: "https://github.com/ishita-punjani/MAISON" },
+      ],
+    },
+    {
+      meta: "PayPal Hackathon",
+      title: "MilestonePay",
+      description:
+        "Built an app that holds a project's budget on PayPal and releases it milestone by milestone once GitHub checks pass.",
+      slug: "milestonepay",
+      links: [
+        { label: "GitHub", url: "https://github.com/manasa1864/MilestonePay" },
       ],
     },
     {
