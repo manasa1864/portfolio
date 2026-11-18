@@ -1,43 +1,46 @@
 import { useEffect, useState } from "react"
 import { content, type Project } from "./content"
+import ProjectPage from "./ProjectPage"
+import { ExternalLink, projectHref, useProjectRoute } from "./ui"
 
 const sections = ["profile", "missions", "skills", "intel", "contact"] as const
-
-const Arrow = () => (
-  <svg viewBox="0 0 20 20" aria-hidden="true">
-    <path d="M7 5h8v8M15 5 5 15" />
-  </svg>
-)
-
-function ExternalLink({
-  href,
-  children,
-}: {
-  href: string
-  children: React.ReactNode
-}) {
-  return (
-    <a
-      className="external"
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {children}
-      <Arrow />
-    </a>
-  )
-}
 
 function Stamp({ small = false }: { small?: boolean }) {
   return (
     <span className={`stamp ${small ? "small" : ""}`} aria-hidden="true">
-      <span className="stamp-ring">
-        <b>CLASSIFIED</b>
-        <i>★ · ★ · ★</i>
-        <b>PUBLIC RELEASE</b>
-      </span>
-      <strong>TOP SECRET</strong>
+      <svg viewBox="0 0 200 200">
+        <defs>
+          <path id="stamp-top" d="M 34 100 A 66 66 0 0 1 166 100" />
+          <path id="stamp-bottom" d="M 24 100 A 76 76 0 0 0 176 100" />
+        </defs>
+        <circle cx="100" cy="100" r="94" className="ring-outer" />
+        <circle cx="100" cy="100" r="87" className="ring-inner" />
+        <text className="arc" fontSize="15" letterSpacing="3">
+          <textPath href="#stamp-top" startOffset="50%" textAnchor="middle">
+            CLASSIFIED
+          </textPath>
+        </text>
+        <text className="arc" fontSize="13" letterSpacing="2.5">
+          <textPath href="#stamp-bottom" startOffset="50%" textAnchor="middle">
+            PUBLIC RELEASE
+          </textPath>
+        </text>
+        <g transform="rotate(-8 100 100)">
+          <rect x="18" y="78" width="164" height="44" className="band" />
+          <rect x="23" y="83" width="154" height="34" className="band-inner" />
+          <text
+            x="100"
+            y="101"
+            textAnchor="middle"
+            dominantBaseline="central"
+            fontSize="24"
+            letterSpacing="1.5"
+            className="band-text"
+          >
+            TOP SECRET
+          </text>
+        </g>
+      </svg>
     </span>
   )
 }
@@ -113,7 +116,11 @@ function ProjectCard({ project }: { project: Project }) {
       <div className="project-top">
         <div>
           <p className="card-index">MISSION // {project.id}</p>
-          <h3>{project.name}</h3>
+          <h3>
+            <a className="card-link" href={projectHref(project.slug)}>
+              {project.name}
+            </a>
+          </h3>
         </div>
         {project.featured && <span className="featured">Featured</span>}
         {project.status && <span className="dev-tag">{project.status}</span>}
@@ -130,6 +137,9 @@ function ProjectCard({ project }: { project: Project }) {
         ))}
       </div>
       <div className="card-actions">
+        <span className="read-more" aria-hidden="true">
+          Read the full briefing →
+        </span>
         {project.code && (
           <ExternalLink href={project.code}>View code</ExternalLink>
         )}
@@ -256,6 +266,11 @@ function Portfolio({ reseal }: { reseal: () => void }) {
     return () => removeEventListener("scroll", scroll)
   }, [])
   useEffect(() => {
+    const id = window.location.hash.slice(1)
+    if (id && !id.startsWith("/"))
+      document.getElementById(id)?.scrollIntoView()
+  }, [])
+  useEffect(() => {
     const keys = (event: KeyboardEvent) => {
       if (["INPUT", "TEXTAREA"].includes((event.target as HTMLElement).tagName))
         return
@@ -280,10 +295,17 @@ function Portfolio({ reseal }: { reseal: () => void }) {
     return () => removeEventListener("keydown", keys)
   }, [active])
   const copy = async () => {
-    await navigator.clipboard.writeText(content.contact.email)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    try {
+      await navigator.clipboard.writeText(content.contact.email)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      window.prompt("Copy this email address:", content.contact.email)
+    }
   }
+  const subject = encodeURIComponent("Hello Manasa")
+  const gmailHref = `https://mail.google.com/mail/?view=cm&fs=1&to=${content.contact.email}&su=${subject}`
+  const mailtoHref = `mailto:${content.contact.email}?subject=${subject}`
   return (
     <div className="portfolio" id="top">
       <a className="skip-link" href="#main-content">
@@ -365,15 +387,6 @@ function Portfolio({ reseal }: { reseal: () => void }) {
             SCROLL TO DECLASSIFY <i />
           </div>
         </section>
-        <div className="facts">
-          {content.facts.map((fact, i) => (
-            <article key={fact.label}>
-              <span>0{i + 1}</span>
-              <strong>{fact.value}</strong>
-              <p>{fact.label}</p>
-            </article>
-          ))}
-        </div>
         <section id="profile" className="content-section">
           <SectionHeader
             number="01"
@@ -410,7 +423,9 @@ function Portfolio({ reseal }: { reseal: () => void }) {
           <div className="field-ops">
             <p className="eyebrow">Field operations · Hackathons</p>
             {content.operations.map((x) => (
-              <span key={x}>{x}</span>
+              <a key={x.label} href={projectHref(x.slug)}>
+                {x.label}
+              </a>
             ))}
           </div>
         </section>
@@ -450,9 +465,14 @@ function Portfolio({ reseal }: { reseal: () => void }) {
                     <p>{item.meta}</p>
                     <h3>{item.title}</h3>
                     <p>{item.description}</p>
-                    {item.links && (
+                    {(item.slug || item.links) && (
                       <div>
-                        {item.links.map((link) => (
+                        {item.slug && (
+                          <a className="external" href={projectHref(item.slug)}>
+                            Read the briefing →
+                          </a>
+                        )}
+                        {item.links?.map((link) => (
                           <ExternalLink href={link.url} key={link.label}>
                             {link.label}
                           </ExternalLink>
@@ -492,6 +512,19 @@ function Portfolio({ reseal }: { reseal: () => void }) {
                 I’m open to AI research, software engineering and thoughtful
                 open-source collaborations.
               </p>
+              <div className="contact-actions">
+                <a
+                  className="button"
+                  href={gmailHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Write on Gmail
+                </a>
+                <a className="button light" href={mailtoHref}>
+                  Use my mail app
+                </a>
+              </div>
               <div className="contact-links">
                 <div>
                   <span>Email</span>
@@ -556,6 +589,7 @@ function Portfolio({ reseal }: { reseal: () => void }) {
 }
 
 export default function App() {
+  const projectSlug = useProjectRoute()
   const [opened, setOpened] = useState(
     () => sessionStorage.getItem("dossier-opened") === "true",
   )
@@ -576,13 +610,22 @@ export default function App() {
   }
   const reseal = () => {
     sessionStorage.removeItem("dossier-opened")
+    window.history.replaceState(null, "", window.location.pathname)
     scrollTo(0, 0)
     setOpened(false)
   }
+  // A direct link to a project skips the cover, and counts as opening the file.
   useEffect(() => {
-    document.body.classList.toggle("locked", !opened)
+    if (projectSlug) {
+      sessionStorage.setItem("dossier-opened", "true")
+      setOpened(true)
+    }
+  }, [projectSlug])
+  useEffect(() => {
+    document.body.classList.toggle("locked", !opened && !projectSlug)
     return () => document.body.classList.remove("locked")
-  }, [opened])
+  }, [opened, projectSlug])
+  if (projectSlug) return <ProjectPage slug={projectSlug} />
   return opened ? (
     <Portfolio reseal={reseal} />
   ) : (
